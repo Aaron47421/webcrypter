@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>web cryptography</title>
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+    
+    <button id="encryptbutton" py-click="encryptfunc()">encrypt : on</button>
+    <button id="decryptbutton" py-click="decryptfunc()">decrypt : false</button>
+    <button id="randkey" py-click="getrandkey()">get random key</button>
+    <input type="text" id="getkey" placeholder="key">
+    <input type="text" id="message" placeholder="message">
+    <h1 id="output"></h1>
+    <button id="submit" py-click="submit()">submit</button>
+
+</head>
+<body>
+    <py-config id="pyconfig">
+packages = ["cryptography"]
+    </py-config>
+    <py-script style="opacity: 0;">
+import js
+from cryptography.fernet import Fernet
+
+js.document.getElementById("pyconfig").remove()
+
+encrypt = True
+decrypt = False 
+
+def encryptfunc():
+    global encrypt, decrypt
+    if encrypt:
+        pass
+    else:
+        encrypt = True
+        decrypt = False
+        js.document.getElementById("encryptbutton").innerHTML = "encrypt : on"
+        js.document.getElementById("decryptbutton").innerHTML = "decrypt : off"
+
+def decryptfunc():
+    global encrypt, decrypt
+    if decrypt:
+        pass
+    else:
+        encrypt = False
+        decrypt = True
+        js.document.getElementById("decryptbutton").innerHTML = "decrypt : on"
+        js.document.getElementById("encryptbutton").innerHTML = "decrypt : off"
+
+def getrandkey():
+    key = Fernet.generate_key()
+    js.document.getElementById("output").innerHTML = key.decode()
+
+def submit():
+    if encrypt:
+        key = js.document.getElementById("getkey").value
+        message = js.document.getElementById("message").value
+        key = Fernet(key)
+
+        resp = key.encrypt(message.encode())
+        js.document.getElementById("output").innerHTML = resp.decode()
+
+    else:
+        key = js.document.getElementById("getkey").value
+        message = js.document.getElementById("message").value
+        key = Fernet(key)
+
+        resp = key.decrypt(message.encode())
+        js.document.getElementById("output").innerHTML = resp.decode()
+
+    </py-script>
+</body>
+</html>
